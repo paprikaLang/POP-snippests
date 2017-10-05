@@ -12,19 +12,15 @@
  - 易于维护:与Facades不同,协议需要声明,查看协议的方法简单清晰,一目了然.
  - 解耦:只要绑定一串关键字('config')无需关心协议是谁实现的,怎么实现的.易于测试和重构.
  - 实现灵活:在Service Provider的register方法里根据不同的配置环境返回不同的Resolved Class实现协议.
-
-app('Illuminate\Contracts\Config\Repository')['database']['default'];
  
 **Service Container** : IOC控制反转是指消费类不需要自己创建所需的服务,只要提出来可由服务容器解析具体对象.
-app('Illuminate\Config\Repository')['database']['default'];
+
 
 **Service Provider** : 在register方法中绑定字符串,返回Resolved Class.消费类引入字符串即可,无需绑定引入的类所需的依赖.
-app('config')['database']['default'];
+
 
 **Facades** : 通过自定义Facades类,在getFacadeAccessor方法中返回绑定好的字符串,可以这样调用对象的方法:
 Config::get('database.default');
 
-
-以上四个data的值是等价的.
 
 
