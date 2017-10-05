@@ -2,15 +2,28 @@
 
 ![](https://ws4.sinaimg.cn/large/006tNc79gy1fjxjf4u1guj310o0ic3zr.jpg)
 
-Demo含重构前(Requests.swift)和重构后(Request.swift)的代码,重构的思想类似APIKit的核心思想:Type-safe networking abstraction layer that associates request type with response type.这样设计是为了对发送请求的类只需要传入一个请求就能得到请求对应的模型;并且高度解耦使得请求方法或请求定义的改变都不会影响另一方,非常易于测试和扩展.
+通过重构前(Requests.swift)和重构后(Request.swift)的代码比较,理解APIKit的核心思想:Type-safe networking abstraction layer that associates request type with response type.
+对发送请求的类只需要传入一个请求就能得到请求对应的模型,高度解耦使得请求方法或请求定义的改变都不会影响另一方,非常易于测试和扩展.
 
 ![](https://ws1.sinaimg.cn/large/006tNc79ly1fk4nj5awkmj319o0t4abw.jpg)
 
-在Laravel的框架中,Service Container,Service Provider,Facades,Contracts(图中四个$data是等价的)也一同实现了面向协议最核心的思想.
+*Contracts* : Laravel非常重要的特点也是面向协议编程思想,实现的目的和重构后的demo一样:
 
- - 易于维护:与Facades不同,需要声明对协议的依赖,而协议的内部遵守的方法一目了然.
+ - 易于维护:与Facades不同,协议需要声明,查看协议的方法简单清晰,一目了然.
  - 解耦:只要绑定一串关键字('config')无需关心协议是谁实现的,怎么实现的.易于测试和重构.
  - 实现灵活:在Service Provider的register方法里根据不同的配置环境返回不同的Resolved Class实现协议.
+
+$data = app('Illuminate\Contracts\Config\Repository')['database']['default'];
  
-Laravel的这些特点正是上面的Swift Demo所追求的.不同语言之间的借鉴和启发是一件很快乐的事.
+*Service Container* : IOC控制反转是指消费类不需要自己创建所需的服务,只要提出来可由服务容器解析具体对象.
+$data3 = app('Illuminate\Config\Repository')['database']['default'];
+
+*Service Provider* : 在register方法中绑定字符串,返回Resolved Class.消费类引入字符串即可,无需绑定引入的类所需的依赖.
+$data2 = app('config')['database']['default'];
+
+*Facades* : 通过自定义Facades类,在getFacadeAccessor方法中返回绑定好的字符串,可以这样调用对象的方法:
+$data1 = Config::get('database.default');
+
+这四个data的值是等价的.
+
 
