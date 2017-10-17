@@ -7,7 +7,7 @@
 
 ![](https://ws1.sinaimg.cn/large/006tNc79ly1fk4nj5awkmj319o0t4abw.jpg)
 
-**Contracts** : Laravel非常重要的特点也是面向协议编程思想,实现的目的和重构后的demo一样:
+**Contracts** : Laravel非常重要的特点是面向接口编程(Interface-Oriented Programming)思想,和POPDemo实现的原理都滥觞于ISP ---- 接口依赖隔离:
 
  - 易于维护:与Facades不同,协议需要声明,查看协议的方法简单清晰,一目了然.
  - 解耦:只要绑定一串关键字('config')无需关心协议是谁实现的,怎么实现的.易于测试和重构.
