@@ -1,13 +1,23 @@
 # POPDemo
 
-![](https://ws4.sinaimg.cn/large/006tNc79gy1fjxjf4u1guj310o0ic3zr.jpg)
+## Swift
 
-通过重构前(Requests.swift)和重构后(Request.swift)的代码比较,理解APIKit的核心思想:Type-safe networking abstraction layer that associates request type with response type.
-对发送请求的类只需要传入一个请求就能得到请求对应的模型,高度解耦使得请求方法或请求定义的改变都不会影响另一方,非常易于测试和扩展.
+![](https://paprika-dev.b0.upaiyun.com/kYmMCvuTxDgUNhAXNPXFaPjjDjnBC0lrrK2GI8cw.jpeg)
 
-![](https://ws1.sinaimg.cn/large/006tNc79ly1fk4nj5awkmj319o0t4abw.jpg)
+通过对比重构前(Requests.swift)和重构后(Request.swift)的代码,可以很清晰地理解Swift和APIKit的面向接口编程的核心思想:
+```
+Type-safe networking abstraction layer that associates request type with response type.
+```
+对发送请求的类只需要传入一个请求就能得到请求对应的模型,高度解耦使得请求方法或请求定义的改变都不会影响另一方,非常易于**测试**和**扩展**.
 
-**Contracts** : Laravel非常重要的特点是面向接口编程(Interface-Oriented Programming)思想,和POPDemo实现的原理都滥觞于ISP ---- 接口依赖隔离:
+[struct,enum,protocol分别针对Type-Safe和测试的几番重构](https://github.com/paprikaLang/DeepEmbedding)
+
+
+## PHP
+
+![](https://paprika-dev.b0.upaiyun.com/6vtrVUAlne9imXsfTwSUkfZpcqAXqItcVWJUTU31.jpeg)
+
+**Contracts** : Laravel非常优秀的特点是面向接口和封装(Interface-Oriented Programming),和Swift-Protocol实现的原理都滥觞于ISP ---- 接口依赖隔离:
 
  - 易于维护:与Facades不同,协议需要声明,查看协议的方法简单清晰,一目了然.
  - 解耦:只要绑定一串关键字('config')无需关心协议是谁实现的,怎么实现的.易于测试和重构.
