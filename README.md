@@ -4,20 +4,22 @@
 
 ![](https://paprika-dev.b0.upaiyun.com/kYmMCvuTxDgUNhAXNPXFaPjjDjnBC0lrrK2GI8cw.jpeg)
 
-通过对比重构前(Requests.swift)和重构后(Request.swift)的代码,可以很清晰地理解Swift和APIKit的面向接口编程的核心思想:
+通过对比重构前(Requests.swift)和重构后(Request.swift)的代码,可以帮助理解Swift和APIKit的面向接口编程的核心思想:
 ```
 Type-safe networking abstraction layer that associates request type with response type.
 ```
-对发送请求的类只需要传入一个请求就能得到请求对应的模型,高度解耦使得请求方法或请求定义的改变都不会影响另一方,非常易于**测试**和**扩展**.
+对发送请求的类只需要传入一个请求就能得到请求对应的模型,请求方法和请求定义高度解耦,任何一方的改变都不会影响另一方,非常易于**测试**和**扩展**.
 
-[struct,enum,protocol分别针对Type-Safe和测试的几番重构](https://github.com/paprikaLang/DeepEmbedding)
+[通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
 
 
 ## PHP
 
-![](https://paprika-dev.b0.upaiyun.com/6vtrVUAlne9imXsfTwSUkfZpcqAXqItcVWJUTU31.jpeg)
+![](https://paprika-dev.b0.upaiyun.com/Y4BUXXgzCtjlIqPaNpOBO62c7VLkiLM5VtOen7eX.jpeg)
 
-**Contracts** : Laravel非常优秀的特点是面向接口和封装(Interface-Oriented Programming),和Swift-Protocol实现的原理都滥觞于ISP ---- 接口依赖隔离:
+ Laravel非常优秀的特点是面向接口和封装,和Swift-Protocol实现的原理都滥觞于ISP ---- 接口依赖隔离.
+ 
+**Contracts** :
 
  - 易于维护:与Facades不同,协议需要声明,查看协议的方法简单清晰,一目了然.
  - 解耦:只要绑定一串关键字('config')无需关心协议是谁实现的,怎么实现的.易于测试和重构.
@@ -31,6 +33,9 @@ Type-safe networking abstraction layer that associates request type with respons
 
 **Facades** : 通过自定义Facades类,在getFacadeAccessor方法中返回绑定好的字符串,可以这样调用对象的方法:
 Config::get('database.default');
+
+
+![](https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg)
 
 
 
