@@ -15,7 +15,7 @@ Type-safe networking abstraction layer that associates request type with respons
 
 ## PHP
 
-![](https://paprika-dev.b0.upaiyun.com/Y4BUXXgzCtjlIqPaNpOBO62c7VLkiLM5VtOen7eX.jpeg)
+![](https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg)
 
  Laravel非常优秀的特点是面向接口和封装,和Swift-Protocol实现的原理都滥觞于ISP ---- 接口依赖隔离.
  
