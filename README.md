@@ -36,7 +36,7 @@ Go的interface接口是对一组行为的描述,实现其所有行为的类都�
 
 ## Swift
 
-```pt
+```pyt
 protocol Requests {
     var host:String{get}
     var path:String{get}
@@ -62,14 +62,37 @@ struct UsersRequest:Requests {
         return Users(data: data)
     }
 }
-
-URLSessionRequestSender().send(UserRequest(name: "paprika")) { user in ...}
 ```
 
-这个例子可以用来理解APIKit的思想 :
-```
-Type-safe networking abstraction layer that associates request type with response type.
+不过为了易于测试还需要借鉴APIKit做一些重构:
+
+```pyt
+let request = SearchRepositoriesRequest(query: "apikit")
+Session.send(request) { result in ...}
 ```
 
-[通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
+用我们的对比,request需要再做一次依赖注入实现和请求方式的解耦:
+
+```
+ let request = UsersRequest(name: "paprika")
+ request.send { (user) in ... }
+```
+
+面向协议编程的优势就在于**解耦**.
+
+```pyt
+struct URLSessionClient: Client {
+    func send<T: Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {...}}
+//测试代码: 对于复杂,缓慢的请求方式如docker,测试时可以mock本地假数据
+struct LocalFileClient: Client {
+    func send<T : Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {
+        switch r.path {
+        case "/users/paprika":
+        default: ... }}
+```
+
+另: 
+[Golang: generates method stubs for implementing an interface](https://github.com/josharian/impl)
+
+[Swift: 通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
 
