@@ -1,16 +1,3 @@
-# POPDemo
-
-## Swift
-
-![](https://paprika-dev.b0.upaiyun.com/kYmMCvuTxDgUNhAXNPXFaPjjDjnBC0lrrK2GI8cw.jpeg)
-
-通过对比重构前(Requests.swift)和重构后(Request.swift)的代码,可以帮助理解Swift和APIKit的面向接口编程的核心思想:
-```
-Type-safe networking abstraction layer that associates request type with response type.
-```
-对发送请求的类只需要传入一个请求就能得到请求对应的模型,请求方法和请求定义高度解耦,任何一方的改变都不会影响另一方,非常易于**测试**和**扩展**.
-
-[通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
 
 
 ## PHP
@@ -18,7 +5,7 @@ Type-safe networking abstraction layer that associates request type with respons
 ![](https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg)
 
  PHP作为一门动态脚本语言,优点是开发效率高,但不能直接操作底层,需要依赖扩展库来提供API.
- Laravel就提供了这样的接口,这和Swift-Protocol实现的原理都滥觞于ISP ---- 接口依赖隔离.
+ Laravel就提供了这样的接口.
  
 **Contracts** :
 
@@ -38,5 +25,58 @@ Config::get('database.default');
 
 ![](https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg)
 
+## Golang
 
+Go的interface接口是对一组行为的描述,实现其所有行为的类都默认satisfy了这个接口.而**依赖注入**则丰富了接口的实现:
+
+![](http://paprika-dev.b0.upaiyun.com/SKlgT3lf7VgWXgBNc92uAC1gv2hUXcEk0ozrK4WK.jpeg)
+
+![](http://paprika-dev.b0.upaiyun.com/UhKzASJ97nWt6Wkdcq4Pr0LaepqSTzEduFgjbyi9.jpeg)
+
+
+## OC
+
+参照Go的依赖注入就会很容易理解孙源的OC版"志玲or凤姐之吻了".这里的protocol就相当于Go的interface,实现的原理都滥觞于ISP ---- 接口依赖隔离:
+
+![](http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg)
+
+
+## Swift
+
+```pt
+protocol Requests {
+    var host:String{get}
+    var path:String{get}
+    var method:HTTPMethods{get}
+    var parameter:[String:Any]{get}
+   
+    associatedtype Responses
+    //依赖注入点
+    func parse(data:Data)->Responses?
+}
+
+extension Requests{
+    func send(handler:@escaping(Responses?)->Void){...}}
+    
+struct Users {
+    init?(data:Data) {... }}  
+    
+struct UsersRequest:Requests {
+    ... ...
+    typealias Responses = Users
+    func parse(data: Data) -> Users? {
+        //依赖注入(和前面Go的db注入是不是很像呢)
+        return Users(data: data)
+    }
+}
+
+URLSessionRequestSender().send(UserRequest(name: "paprika")) { user in ...}
+```
+
+这个例子可以用来理解APIKit的思想,用APIKit来解释  **接口依赖隔离**:
+```
+Type-safe networking abstraction layer that associates request type with response type.
+```
+
+[通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
 
