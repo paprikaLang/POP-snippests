@@ -13,7 +13,7 @@
 Config::get('database.default');
 
  
-**Contracts** : 就是本项目的主角: **接口**.Laravel里叫契约, 提供了定义核心服务如缓存...的接口.应用时可以在消费类中注入缓存服务的接口,实现的背后是Memcached还是Redis其实消费类并不需要知道,这样的松耦合非常易于重构和测试.
+**Contracts** : 本项目的主角: **接口**.Laravel里叫契约, 提供了定义核心服务如缓存等等的接口.应用时可以在消费类中注入缓存服务的接口,实现的背后是Memcached还是Redis其实消费类并不需要知道,这样的松耦合非常易于重构和测试.
 
 ![](https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg)
 
@@ -29,7 +29,7 @@ Go的interface接口是对一组行为的描述,实现其所有行为的类都�
 
 ## OC
 
-参照Go的依赖注入就会很容易理解孙源的OC版"志玲/凤姐之吻"了.这里的protocol就相当于Go的interface,实现的原理都滥觞于ISP ---- 接口依赖隔离:
+孙源的OC版"志玲/凤姐之吻"也是一种对protocol的依赖注入.
 
 ![](http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg)
 
@@ -64,21 +64,21 @@ struct UsersRequest:Requests {
 }
 ```
 
-不过为了易于测试还需要借鉴APIKit做一些重构:
+不过为了易于测试,还需要借鉴APIKit做一些重构:
 
 ```pyt
-let request = SearchRepositoriesRequest(query: "apikit")
+let request = SearchRepositoriesRequest(query: "APIKit")
 Session.send(request) { result in ...}
 ```
 
-用我们的对比,request需要再做一次依赖注入实现和请求方式的解耦:
+我们的request对比下来还需要再做一次依赖注入实现和请求方式的解耦:
 
 ```
  let request = UsersRequest(name: "paprika")
  request.send { (user) in ... }
 ```
 
-面向协议编程的优势就在于**解耦**.
+而面向协议编程的优势就在于**解耦**:
 
 ```pyt
 struct URLSessionClient: Client {
@@ -92,6 +92,7 @@ struct LocalFileClient: Client {
 ```
 
 另: 
+
 [Golang: generates method stubs for implementing an interface](https://github.com/josharian/impl)
 
 [Swift: 通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
