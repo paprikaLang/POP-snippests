@@ -64,19 +64,21 @@ struct UsersRequest:Requests {
 }
 ```
 
-不过为了易于测试,还需要借鉴APIKit做一些重构:
-
-```pyt
-let request = SearchRepositoriesRequest(query: "APIKit")
-Session.send(request) { result in ...}
-```
-
-我们的request对比下来还需要再做一次依赖注入实现和请求方式的解耦:
+借鉴APIKit做一些易于测试的重构:
 
 ```
  let request = UsersRequest(name: "paprika")
  request.send { (user) in ... }
+                      --重构前
 ```
+
+```pyt
+let request = SearchRepositoriesRequest(query: "APIKit")
+Session.send(request) { result in ...}      
+                      --APIKit
+```
+
+我们的request对比下来还需要再做一次依赖注入,实现和请求方式的解耦.
 
 而面向协议编程的优势就在于**解耦**:
 
