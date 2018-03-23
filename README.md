@@ -46,7 +46,9 @@ protocol Requests {
     var parameter:[String:Any]{get}
    
     associatedtype Responses
+    
     //依赖注入点
+    
     func parse(data:Data)->Responses?
 }
 
@@ -60,10 +62,22 @@ struct UsersRequest:Requests {
     ... ...
     typealias Responses = Users
     func parse(data: Data) -> Users? {
+    
         //依赖注入(和前面Go的db注入是不是很像呢)
+        
         return Users(data: data)
     }
 }
+```
+
+```
+ func parse(data: Data) -> Users? { 
+      return Users(data: data)
+ }
+    
+ func NewOrderService(db *sql.DB) inventory.OrderStorage {
+      return &OrderService {db: db} 
+ }
 ```
 
 喵神的网络请求协议借鉴APIKit做了一些易于测试的重构:
@@ -80,14 +94,16 @@ Session.send(request) { result in ...}
                       --APIKit
 ```
 
-对比下来request还需要再做一次依赖注入,实现和请求方式的解耦.
+request再做一次依赖注入,实现和**请求方式**的解耦.
 
 而面向协议编程的优势就在于**解耦**:
 
 ```pyt
 struct URLSessionClient: Client {
     func send<T: Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {...}}
+    
 //测试代码: 对于复杂,缓慢的请求方式如docker,测试时可以mock本地假数据
+
 struct LocalFileClient: Client {
     func send<T : Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {
         switch r.path {
