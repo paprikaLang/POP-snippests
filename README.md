@@ -15,7 +15,7 @@
 the resolved object.
 
 
-**Contracts** : **接口** . 提供了定义核心服务如缓存等等的接口.应用时可以在消费类中注入缓存服务的接口,实现的背后是 Memcached 还是 Redis 其实消费类并不需要知道,这样的松耦合非常易于重构和测试.
+**Contracts** : **接口** . 提供了定义核心服务如缓存, ... 的接口.应用时可以在消费类中注入缓存服务的接口,实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的松耦合非常易于 重构 和 测试 .
 
 <img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"/>
 
@@ -23,7 +23,7 @@ the resolved object.
 ## Golang
 
 
-Golang 的 interface 接口是对一组行为的描述,实现其所有行为的 struct 就默认 隐式实现 了这个接口.
+Golang  interface 接口是对 duck typing 的一组行为的描述,实现其所有行为的 struct 都默认 '隐式实现' 了这个接口.
 
 <img src="http://paprika-dev.b0.upaiyun.com/SKlgT3lf7VgWXgBNc92uAC1gv2hUXcEk0ozrK4WK.jpeg" width="600"/>
 
@@ -73,15 +73,15 @@ struct UsersRequest:Requests {
 ```swift
  let request = UsersRequest(name: "paprika")
  request.send { (user) in ... }
-                      --重构前
+                      -- 重构前
 ```
 
 request 需要再做一次依赖注入, 实现和 **请求方式** 的解耦.
 
 ```swift
-let request = SearchRepositoriesRequest(query: "APIKit")
+let request = SearchRepositoriesRequest(query: "paprika")
 Session.send(request) { result in ...}      
-                      --APIKit
+                      -- APIKit
 ```
 
 而 **面向协议编程** 的优势就在于 **解耦** .
@@ -89,7 +89,7 @@ Session.send(request) { result in ...}
 ```swift
 struct URLSessionClient: Client {
     func send<T: Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {...}}
-                     --重构后
+                      -- 重构后
 ```
     
 这样, 对于复杂,缓慢的请求方式如 docker ,测试时可以拦截request, mock本地假数据.
@@ -101,16 +101,20 @@ struct LocalFileClient: Client {
             case "/users/paprika/...":
             ... }}
 ```
-说到拦截请求, 修改返回数据, 要提一下两款工具: Charles 和 Burp Suite
+说到拦截请求, 这里要提一下两款工具: Charles 和 Burp Suite
 
 <img src="http://paprika-dev.b0.upaiyun.com/Fo37ep1QhK29HMyh3rWOfjYZehOJp1XHl7Ai2EOm.jpeg" width="600"/>
 <img src="http://paprika-dev.b0.upaiyun.com/EG2uprvBaDPbM6oyCTqB5xCrFz9MYHVsASGqpCWC.jpeg" width="600"/>
 <img src="http://paprika-dev.b0.upaiyun.com/iU9959TKRfTOBO7noXT39RadDf1fMNSASKQLw7wU.jpeg" width="600"/>
 <img src="http://paprika-dev.b0.upaiyun.com/l5VERFuQnm3PL8HfZhXoaZDYi7FTIUY0nK5PeHoE.jpeg" width="600"/>
 
-Charles 和 Burp Suite 的原理其实都是监听程序的端口, 并作为程序代理, 在传输请求的过程中处理请求数据. 
+Charles 和 Burp Suite 的原理是监听程序的端口, 并作为程序代理, 在传输请求的过程中处理请求数据. 
 
-在 JavaScript 中 也有 proxy 代理的概念, 也同样可以在 web 服务中拦截请求, 实现请求和请求方式之间的解耦(即请求的返回数据以何种方式获得无需知晓);同时, 对返回数据依情景自定义.
+
+## Javascript
+
+
+在 JavaScript 中 也有 proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现请求和请求方式之间的解耦(即请求的返回数据以何种方式获得无需知晓);同时, 对返回数据依情景自定义.
 
 ```javascript
 const service = createWebService('http:example.com/data');
@@ -127,6 +131,16 @@ function createWebService(baseUrl){
          }
     });
 }
+```
+
+```swift
+//Swift
+Session.send(Request(query: "users")) { result in ...}      
+                      -- APIKit
+
+//Javascript
+service.users().then(json => {})
+                      -- Proxy
 ```
 
 另: 
