@@ -4,11 +4,11 @@
 
 
 <img src="https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg" width="900"/>
- 
-**Service Container** : IOC控制反转是指消费类不需要自己创建所需的服务, 只要提出来可由服务容器解决.
+  
+**Service Container** : IOC 控制反转是指消费类不需要自己创建所需的服务, 只要提出来可由服务容器解决.
 
 
-**Service Provider** : 在register方法中绑定字符串, 返回Resolved Class. 消费类引入字符串即可, 无需绑定和注入依赖.
+**Service Provider** : 在 register 方法中绑定字符串, 返回 Resolved Class. 消费类引入字符串即可, 无需绑定和注入依赖.
 
 
 **Facades** : 通过自定义 Facades 类,在 getFacadeAccessor 方法中返回 what to resolve from the container, __callStatic() 魔法方法会 defer calls from facade object to 
@@ -59,8 +59,9 @@ extension Requests{
       handler(Response.parse(data: data))}}
     
 struct Users {
-    init?(data:Data) {... }}  
-    
+    init?(data:Data) {... }} 
+
+//显式遵守协议    
 struct UsersRequest:Requests {
     ... ...
     typealias Responses = Users
@@ -70,16 +71,13 @@ struct UsersRequest:Requests {
 }
 ```
 
-上面协议中的 associatedtype 关键字和 Golang 中的 `type xx interface`类似, 可以理解成 '比武招亲' 的招贴, 区别仅在于 Swift 必须显式遵守协议, 而 Golang 可以隐式实现.
+上面 Requests 协议中的 `associatedtype` 关键字和 Golang 中的 `type SonInLaw interface` 都可以理解成为 '比武招亲' 的招贴 ---- 只要符合上面的基本要求, 能者之间可以公平竞争. 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
 
-**喵神** 的这个网络请求协议为进一步解耦, 借鉴 APIKit 做了一些易于测试和扩展的重构.
+**喵神** 的这个网络请求协议之后又做了进一步的解耦重构, 主要有下面两方面:
 
-解耦的点主要有两方面:
+> 1. 如何请求数据, Request 无需知晓. 抽离 URLSession , 交给协议 RequestSender .
 
-> 1. 如何请求数据, Request 无需知晓. 抽离 URLSession
-
-> 2. 如何 data 转 model, Model 无需知晓. 抽离 JSONSerialization
-
+> 2. 如何 data 转 model, Model 无需知晓. 抽离 JSONSerialization , 交给协议 Decodable . 
 
 ```swift
  let request = UsersRequest(name: "paprika")
@@ -88,20 +86,42 @@ struct UsersRequest:Requests {
 ```
 
 ```swift
+struct URLSessionRequestSender: RequestSender {
+    func send<T: Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {...}}
+                      -- 重构后
+```
+
+
+喵神重构方案的灵感来自于 APIKit 这款框架:
+
+```swift
 let request = SearchRepositoriesRequest(query: "paprika")
 Session.send(request) { result in ...}      
                       -- APIKit
 ```
 
-而 **面向协议编程** 的优势就在于 **解耦** .
-
-```swift
-struct URLSessionRequestSender: RequestSender {
-    func send<T: Request>(_ r: T, handler: @escaping (T.Response?) -> Void) {...}}
-                      -- 重构后
+形式上看, 从 `request.send` 到 `Session.send(request)` 很像 JavaScript 里的 Reflect .
+```JavaScript
+var user = {name: 'frank', age:12};
+user.name;    
+Reflect.get(user,'name');
+```
+```JavaScript
+var user = {lives:3};
+var proxy =new Proxy(user, {
+    get(target, prop){
+        return Reflect.get(target, prop)
+    },
+    set(target, prop, value) {
+        if(prop === 'lives' && value < 0) {
+            value = 0
+        }
+        return Reflect.set(target, prop, value)
+    }
+})
 ```
     
-这样, 对于复杂,缓慢的请求方式如 docker ,测试时可以拦截request, mock本地假数据.
+功能上看, 它们都能 '暗箱操作' 将要返回的数据而在代码层面无需大的改动(后面也会有 Proxy 实现解耦的方案代码), 如对于 复杂 缓慢 的请求方式 Docker , 测试时可以拦截 request , mock 本地假数据.
 
 ```swift
 struct TestRequestSender: RequestSender {
@@ -110,7 +130,7 @@ struct TestRequestSender: RequestSender {
             case "/users/paprika/...":
             ... }}
 ```
-说到拦截请求, 这里要提一下两款工具: Charles 和 Burp Suite
+说到拦截请求, 这里顺便提一下两款调试工具: Charles 和 Burp Suite
 
 <img src="http://paprika-dev.b0.upaiyun.com/Fo37ep1QhK29HMyh3rWOfjYZehOJp1XHl7Ai2EOm.jpeg" width="600"/>
 <img src="http://paprika-dev.b0.upaiyun.com/EG2uprvBaDPbM6oyCTqB5xCrFz9MYHVsASGqpCWC.jpeg" width="600"/>
@@ -123,9 +143,9 @@ Charles 和 Burp Suite 的原理是监听程序的端口, 并作为程序代理,
 ## Javascript
 
 
-在 JavaScript 中 也有 proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现请求和请求方式之间的解耦, 同时对返回数据依情景自定义.
+前面提到过, 应用 proxy 代理也可以在 web 服务中拦截请求, 实现同样的 请求和请求方式之间的解耦, 并对返回数据依情景自定义.
 
-```javascript
+```JavaScript
 const service = createWebService('http:example.com/data');
 
 service.users().then(json => {
@@ -156,5 +176,5 @@ service.users().then(json => {})
 
 [Golang: generates method stubs for implementing an interface](https://github.com/josharian/impl)
 
-[Swift: 通过struct, enum, protocol分别对代码重构达成易于测试和Type-safe的效果](https://github.com/paprikaLang/DeepEmbedding)
+[Swift: 通过 struct, enum, protocol 分别对代码重构达成易于测试和 Type-safe 的效果](https://github.com/paprikaLang/DeepEmbedding)
 
