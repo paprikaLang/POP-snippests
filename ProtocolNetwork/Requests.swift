@@ -15,21 +15,20 @@ enum HTTPMethods:String {
     case GET
     case POST
 }
-//创建一个protocol来代表请求,对请求来说,需要知道路径HTTP和参数
+//创建一个protocol来代表请求,对请求来说,只需要知道路径HTTP和参数
 protocol Requests {
     var host:String{get}
     var path:String{get}
     var method:HTTPMethods{get}
     var parameter:[String:Any]{get}
-    //回调的参数类型不能是User,关联类型把回调参数抽象成为最顶端通用的Responses类
+    //回调的参数类型不能是User,关联类型把回调参数抽象成为上层通用的Responses类
     associatedtype Responses
-    //提供一个接口让遵守协议的类都可以可以获取data,转换成对应的对象
+    //提供一个接口让遵守协议的类都可以获取data, 并在内部转换.
     func parse(data:Data)->Responses?
 }
 extension Requests{
-    //用Responses替代参数Users
     func send(handler:@escaping(Responses?)->Void){
-        //为了任意请求都可以通过它发送,定义在协议扩展上
+
         let url = URL(string:host.appending(path))!
         var request = URLRequest(url:url)
         request.httpMethod = method.rawValue
