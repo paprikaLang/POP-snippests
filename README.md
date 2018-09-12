@@ -72,7 +72,7 @@ struct UsersRequest:Requests {
 }
 ```
 
-上面**喵神** Requests 协议中的 `associatedtype` 关键字和 Golang 的接口 `type SonInLaw interface` 都可以理解为 '比武招亲' 的 招贴 --- 只要实现了 Requests , Responses 的类型可以是 Users, Animals ... , 但 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
+上面**喵神** Requests 协议中的 `associatedtype` 关键字和 Golang 的接口 `type SonInLaw interface` 都可以理解为 '比武招亲' 的 招贴 --- 只要实现了 Requests , Responses 的类型可以是 Users, Animals ... , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
 
 接下来喵神对他的网络请求协议又做了进一步的解耦重构, 主要有下面两方面:
 
@@ -101,21 +101,11 @@ struct TestRequestSender: RequestSender {
             case "/users/paprika/...":
             ... }}
 ```
-说到拦截请求 修改数据, 这里要提一下两款调试工具: Charles 和 Burp Suite
-
-<img src="http://paprika-dev.b0.upaiyun.com/Fo37ep1QhK29HMyh3rWOfjYZehOJp1XHl7Ai2EOm.jpeg" width="600"/>
-<img src="http://paprika-dev.b0.upaiyun.com/EG2uprvBaDPbM6oyCTqB5xCrFz9MYHVsASGqpCWC.jpeg" width="600"/>
-<img src="http://paprika-dev.b0.upaiyun.com/iU9959TKRfTOBO7noXT39RadDf1fMNSASKQLw7wU.jpeg" width="600"/>
-<img src="http://paprika-dev.b0.upaiyun.com/l5VERFuQnm3PL8HfZhXoaZDYi7FTIUY0nK5PeHoE.jpeg" width="600"/>
-
-Charles 和 Burp Suite 的原理是监听程序的端口, 并作为程序代理, 在传输请求的过程中处理请求数据. 
-
 
 
 ## Javascript
 
-
-JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现 请求和请求方式 之间的解耦.
+JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.
 
 ```JavaScript
 const service = createWebService('http:example.com/data');
