@@ -72,7 +72,7 @@ struct UsersRequest:Requests {
 }
 ```
 
-上面**喵神** Requests 协议中的 `associatedtype` 关键字和 Golang 的接口 `type SonInLaw interface` 都可以理解为 '比武招亲' 的 招贴 --- 只要实现了 Requests , Responses 的类型可以是 Users, Animals ... , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
+上面[喵神](https://github.com/MDCC2016/ProtocolNetwork)Requests 协议中的 `associatedtype` 关键字和 Golang 的接口 `type SonInLaw interface` 都可以理解为 '比武招亲' 的 招贴 --- 只要实现了 Requests , Responses 的类型可以是 Users, Animals ... , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
 
 接下来喵神对他的网络请求协议又做了进一步的解耦重构, 主要有下面两方面:
 
