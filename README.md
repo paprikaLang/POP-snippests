@@ -1,45 +1,66 @@
-
-
 ## Laravel
 
 
-<img src="https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg" width="900"/>
+<img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"/>
+
   
-**Service Container** : IOC 控制反转是指消费类不需要自己创建所需的服务, 只要提出来可由服务容器解决.
+**Service Container** : 
+
+<img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"/>
 
 
-**Service Provider** : 在 register 方法中绑定字符串, 返回 Resolved Class. 消费类引入字符串即可, 无需绑定和注入依赖.
+Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需创建和实现它. Laravel 会利用反射机制自动创建并应用这个 Foo 类. 
+
+**Service Provider** : 在 register 方法中绑定字符串(app->singleton('files')), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.
+
+<img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"/>
 
 
-**Facades** : 通过自定义 Facades 类,在 getFacadeAccessor 方法中返回 what to resolve from the container, __callStatic() 魔法方法会 defer calls from facade object to 
-the resolved object.
+**Facades** : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 ` $instance = static::getFacadeRoot(); ` [详细请参考](https://segmentfault.com/a/1190000009171779#articleHeader0)
+
+```
+'aliases' => [
+  'App' => Illuminate\Support\Facades\App::class,
+]
+```
+
+**Contracts** : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的**松耦合**非常易于 重构 和 测试 .
+
+[[不同语言下的"Contracts"]](https://github.com/paprikaLang/POP-snippests)
+
+<img src="https://paprika-dev.b0.upaiyun.com/6BYJtdX8csiC3e6G55IU6ao02jPcBDUAtdDazp8k.jpeg" width="500"/>
 
 
-**Contracts** : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的松耦合非常易于 重构 和 测试 .
+看一个 Laravel-Echo 的例子:
 
-<img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"/>
+> Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel's event broadcasting features. 
 
+```
+valet secure echo-push               //HTTPS
+BROADCAST_DRIVER=pusher              //pusher
+composer require pusher/pusher-php-server "~3.0"  //communication between servers and devices
+php artisan make:event OrderUpdated  //创建触发事件
+```
 
-## Golang
+生成的OrderUpdated事件实现了 `Illuminate\Contracts\Broadcasting\ShouldBroadcast` 协议的 `broadcastOn` 方法.
 
+<img src="https://paprika-dev.b0.upaiyun.com/rDnaMNHvDUqbP48UT39ub4EcsD6UdvTvdyPyDmoV.jpeg" width="400"/>
 
-Golang  `Interface` 接口是对 `duck typing` 的一组行为的描述, 实现其所有行为的 struct 都默认实现了这个接口.
+<img src="https://paprika-dev.b0.upaiyun.com/GukIgeAjd3kxjXXMe6oDfjOYd9YzQI1gnlk7A0mj.jpeg" width="400"/>
 
-<img src="http://paprika-dev.b0.upaiyun.com/SKlgT3lf7VgWXgBNc92uAC1gv2hUXcEk0ozrK4WK.jpeg" width="600"/>
+当事件被触发时 `event(new \App\Events\OrderUpdated($order))`, broadcastOn 会把 orders 频道里的数据发送给 pusher .
 
-<img src="http://paprika-dev.b0.upaiyun.com/UhKzASJ97nWt6Wkdcq4Pr0LaepqSTzEduFgjbyi9.jpeg" width="600"/>
+Channel 可以换成 PrivateChannel 或者 PresenceChannel.
 
+<img src="https://paprika-dev.b0.upaiyun.com/l9l4ZOl6yfJHWwvKUw1J2z615eMcfiPEQRtaAyhX.jpeg" width="400"/>
 
-## OC
+pusher 最后将数据广播给监听这个频道的客户端
 
+<img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"/>
 
-OC 版对 protocol 注入 duck type 的实现. 
-
-<img src="http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg" width="600"/>
-
-
+<br>
 ## Swift
-
+<br>
 
 ```swift
 protocol Requests {
@@ -72,9 +93,29 @@ struct UsersRequest:Requests {
 }
 ```
 
-上面[喵神](https://github.com/MDCC2016/ProtocolNetwork)Requests 协议中的 `associatedtype` 关键字和 Golang 的接口 `type SonInLaw interface` 都可以理解为 '比武招亲' 的 招贴 --- 只要实现了 Requests , Responses 的类型可以是 Users, Animals ... , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.
+喵神的 **[[网络请求协议]](https://github.com/MDCC2016/ProtocolNetwork)** 和 Laravel-Echo 实例对比来看:
 
-接下来喵神对他的网络请求协议又做了进一步的解耦重构, 主要有下面两方面:
+```PHP
+class OrderUpdated implements ShouldBroadcast
+{
+  public function broadcastOn()
+  {
+      return new Channel('orders');
+  }
+}
+                -- laravel
+```
+```Swift
+struct UsersRequest:Requests {
+    typealias Responses = Users
+    func parse(data: Data) -> Users? {
+        return Users(data: data)
+    }
+}
+                -- swift
+```
+
+其实还可以做进一步的解耦重构, 主要有下面两方面:
 
 > 1. 如何请求数据, Request 无需知晓. 抽离 URLSession , 交给协议 RequestSender .
 
@@ -102,9 +143,9 @@ struct TestRequestSender: RequestSender {
             ... }}
 ```
 
-
+<br>
 ## Javascript
-
+<br>
 JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.
 
 ```JavaScript
