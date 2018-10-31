@@ -1,4 +1,6 @@
 <?php
+//use App\Billing\Stripe;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +14,15 @@
 */
 
 Route::get('/', function () {
-
     return view('welcome');
 });
+
 Route::get('/order', function () {
     $order = App\Order::find(2);
     event(new \App\Events\OrderUpdated($order));
+});
+
+Route::get('/stripe', function () {
+    dd(Billing::charge());
+//    dd(app('Billing')->charge());
 });
