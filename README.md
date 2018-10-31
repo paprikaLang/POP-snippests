@@ -59,7 +59,9 @@ pusher 最后将数据广播给监听这个频道的客户端
 <img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"/>
 
 <br>
+
 ## Swift
+
 <br>
 
 ```swift
@@ -144,7 +146,9 @@ struct TestRequestSender: RequestSender {
 ```
 
 <br>
+
 ## Javascript
+
 <br>
 JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.
 
