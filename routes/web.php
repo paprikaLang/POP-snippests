@@ -17,6 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/tasks', function () {
+    return \App\Task::all()->pluck('body');
+});
+Route::post('/tasks', function() {
+   \App\Task::forceCreate(['body'=> request('body')]);
+});
+
 Route::get('/order', function () {
     $order = App\Order::find(2);
     event(new \App\Events\OrderUpdated($order));
