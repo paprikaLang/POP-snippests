@@ -24,7 +24,11 @@
         mounted() {
             axios.get('/tasks').then(response => {
                 this.tasks = response.data
-            })
+            });
+            window.Echo.channel('tasks').listen('TaskCreated', e => {
+//                console.log(e.task.body);
+                this.tasks.push(e.task.body);
+            });
         },
         methods: {
             addTask() {

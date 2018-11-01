@@ -57163,6 +57163,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/tasks').then(function (response) {
             _this.tasks = response.data;
         });
+        window.Echo.channel('tasks').listen('TaskCreated', function (e) {
+            //                console.log(e.task.body);
+            _this.tasks.push(e.task.body);
+        });
     },
 
     methods: {

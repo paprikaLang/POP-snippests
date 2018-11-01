@@ -21,7 +21,8 @@ Route::get('/tasks', function () {
     return \App\Task::all()->pluck('body');
 });
 Route::post('/tasks', function() {
-   \App\Task::forceCreate(['body'=> request('body')]);
+    $task = \App\Task::forceCreate(['body'=> request('body')]);
+    event(new \App\Events\TaskCreated($task));
 });
 
 Route::get('/order', function () {
