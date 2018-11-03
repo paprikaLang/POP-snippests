@@ -1,4 +1,5 @@
 ## Laravel
+<br>
 
 <img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"/>
 
@@ -30,7 +31,7 @@ Ioc—Inversion of Control -- “控制反转”. 消费类只管声明需要的
 <img src="https://paprika-dev.b0.upaiyun.com/6BYJtdX8csiC3e6G55IU6ao02jPcBDUAtdDazp8k.jpeg" width="500"/>
 
 
-**看一个 Laravel-Echo 的例子**:
+#### **看一个 Laravel-Echo 的例子**:
 
 > Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel's event broadcasting features. 
 
@@ -146,9 +147,10 @@ struct TestRequestSender: RequestSender {
 
 <br>
 
-## Javascript
+## JavaScript
 
 <br>
+
 JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender)之间的解耦.
 
 ```javascript
@@ -173,7 +175,7 @@ function createWebService(baseUrl){
 Session.send(Request(query: "users")) { result in ...}      
                       -- APIKit
 
-//Javascript
+//JavaScript
 service.users().then(json => {})
                       -- Proxy
 ```
