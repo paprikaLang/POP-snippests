@@ -1,7 +1,7 @@
 <?php
 //use App\Billing\Stripe;
 use Illuminate\Support\Facades\Route;
-
+use Facades\App\Services\Weibo;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,4 +33,8 @@ Route::get('/order', function () {
 Route::get('/stripe', function () {
     dd(Billing::charge());
 //    dd(app('Billing')->charge());
+});
+
+Route::get('/weibo', function () {
+    Weibo::publish('paprikaLang');//Non-static method App\Services\Weibo::publish() should not be called statically
 });
