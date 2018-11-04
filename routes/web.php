@@ -2,6 +2,7 @@
 //use App\Billing\Stripe;
 use Illuminate\Support\Facades\Route;
 use Facades\App\Services\Weibo;
+use Illuminate\Support\Facades\Event;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +14,10 @@ use Facades\App\Services\Weibo;
 |
 */
 
+//Event::listen('eloquent.created: App\Task',function (){
+//    dd('a task created');
+//});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,8 +26,12 @@ Route::get('/tasks', function () {
     return \App\Task::all()->pluck('body');
 });
 Route::post('/tasks', function() {
-    $task = \App\Task::forceCreate(['body'=> request('body')]);
+    $task = \App\Task::create(['body'=> request('body')]);
     event(new \App\Events\TaskCreated($task));
+});
+
+Route::get('/task', function() {
+    \App\Task::forceCreate(['body'=> '9']);
 });
 
 Route::get('/order', function () {
