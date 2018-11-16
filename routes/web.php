@@ -31,7 +31,7 @@ Route::post('/tasks', function() {
 });
 
 Route::get('/task', function() {
-    \App\Task::forceCreate(['body'=> '9']);
+    \App\Task::forceCreate(['body'=> '11']);
 });
 
 Route::get('/order', function () {
@@ -47,3 +47,6 @@ Route::get('/stripe', function () {
 Route::get('/weibo', function () {
     Weibo::publish('paprikaLang');//Non-static method App\Services\Weibo::publish() should not be called statically
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
